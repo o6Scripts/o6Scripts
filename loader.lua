@@ -3,10 +3,10 @@ if not game:IsLoaded() then
 end
 
 
-local BASE = 'https://raw.githubusercontent.com/joustingmatch/Ouroboros/main/games/'
+local BASE = 'https://raw.githubusercontent.com/o6Scripts/o6Scripts/tree/main/games'
 
 local games = {
-    [9190691]    = 'greedy-growers',
+    [74102906764176]    = 'greedy-growers',
 }   
 
 local file = games[game.CreatorId]
