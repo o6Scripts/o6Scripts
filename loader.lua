@@ -2,8 +2,7 @@ if not game:IsLoaded() then
     game.Loaded:Wait()
 end
 
-
-local BASE = 'https://raw.githubusercontent.com/o6Scripts/o6Scripts/tree/main/games'
+local BASE = 'https://raw.githubusercontent.com/o6Scripts/o6scripts/main/games/'
 
 local games = {
     [74102906764176]    = 'greedy-growers',
