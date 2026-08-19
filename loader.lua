@@ -6,7 +6,7 @@ local BASE = 'https://raw.githubusercontent.com/o6Scripts/o6scripts/main/games/'
 
 local games = {
     [74102906764176] = 'greedy-growers.lua',
-    [10144280947] = 'monkey-espace.lua',
+    [114697347887839] = 'monkey-espace.lua',
 }
 
 local file = games[game.PlaceId]
