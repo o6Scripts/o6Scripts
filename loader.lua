@@ -1,11 +1,7 @@
 --!nocheck
---[[
-    o6Scripts Loader
-    Usage: loadstring(game:HttpGet("https://raw.githubusercontent.com/o6Scripts/o6Scripts/main/loader.lua"))()
-]]
 
 local GITHUB_URL = "https://raw.githubusercontent.com/o6Scripts/o6Scripts/main"
-local CK_URL = "https://raw.githubusercontent.com/4lpaca-pin/CompKiller/main/src/source.luau"
+local CK_URL = "https://raw.githubusercontent.com/o6Scripts/o6Scripts/main/src/source.luau"
 
 local GAMES = {
     ["74102906764176"] = "games/greedy-growers.lua",
