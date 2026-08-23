@@ -1,74 +1,96 @@
---[
-    o6Scripts Loader
+--[========================================================[
+    o6Scripts Loader (Modular & Fehlerfrei)
     One-liner: loadstring(game:HttpGet("https://raw.githubusercontent.com/o6Scripts/o6Scripts/main/loader.lua"))()
-]--
+]========================================================]
 
-local PLACE_IDS = {
+local HttpService = game:GetService("HttpService")
+local StarterGui = game:GetService("StarterGui")
+
+-- Konfiguration: PlaceIDs und die dazugehörigen Skripte
+local GAMES = {
     [74102906764176] = "games/greedy-growers.lua",
+    -- Weitere Spiele kannst du hier ganz einfach hinzufügen:
+    -- [PLACE_ID_HIER] = "games/dein-spiel.lua",
 }
 
-local BASE = "https://raw.githubusercontent.com/o6Scripts/o6Scripts/main/"
-local CK_URL = "https://raw.githubusercontent.com/4lpaca-pin/CompKiller/main/src/source.luau"
+local REPO_BASE = "https://raw.githubusercontent.com/o6Scripts/o6Scripts/main/"
+local COMPKILLER_URL = "https://raw.githubusercontent.com/4lpaca-pin/CompKiller/main/src/source.luau"
 
-local placeId = game.PlaceId
-local gameScript = PLACE_IDS[placeId]
-
--- Überprüfen, ob das Spiel unterstützt wird
-if not gameScript then
+-- Benachrichtigungs-Helper
+local function notify(title, text)
     pcall(function()
-        game:GetService("StarterGui"):SetCore("SendNotification", {
-            Title = "o6Scripts",
-            Text = "Unsupported game (PlaceId: " .. tostring(placeId) .. ")",
-            Duration = 5,
+        StarterGui:SetCore("SendNotification", {
+            Title = title,
+            Text = text,
+            Duration = 4,
         })
     end)
-    warn("[o6Scripts] Unsupported game ID: " .. tostring(placeId))
+    print(string.format("[%s] %s", title, text))
+end
+
+-- 1. Spiel-Überprüfung
+local currentPlaceId = game.PlaceId
+local targetScriptPath = GAMES[currentPlaceId]
+
+if not targetScriptPath then
+    notify("o6Scripts", "Nicht unterstütztes Spiel! (ID: " .. tostring(currentPlaceId) .. ")")
     return
 end
 
-print("[o6Scripts] Loading Compkiller...")
+-- 2. Compkiller-Bibliothek laden
+notify("o6Scripts", "Lade Compkiller...")
 
--- Compkiller sicher abrufen
-local success, ckSrc = pcall(function()
-    return game:HttpGet(CK_URL)
+local successCk, ckSource = pcall(function()
+    return game:HttpGet(COMPKILLER_URL)
 end)
 
-if not success or not ckSrc or #ckSrc < 1000 then
-    warn("[o6Scripts] Compkiller fetch failed or source too small.")
+if not successCk or not ckSource or #ckSource < 500 then
+    notify("o6Scripts", "Fehler: Compkiller konnte nicht geladen werden.")
     return
 end
 
-local ckFn, ckErr = loadstring(ckSrc)
-if not ckFn then
-    warn("[o6Scripts] Compkiller compile error: " .. tostring(ckErr))
+local loadCkFn, errCk = loadstring(ckSource)
+if not loadCkFn then
+    notify("o6Scripts", "Compkiller Syntax-Fehler: " .. tostring(errCk))
     return
 end
 
-local successRun, Compkiller = pcall(ckFn)
-if not successRun or not Compkiller then
-    warn("[o6Scripts] Failed to execute Compkiller library.")
+local runCk, compkillerLib = pcall(loadCkFn)
+if not runCk or not compkillerLib then
+    notify("o6Scripts", "Compkiller Ausführungsfehler.")
     return
 end
 
-print("[o6Scripts] Compkiller loaded successfully!")
+notify("o6Scripts", "Compkiller erfolgreich geladen!")
 
--- Das eigentliche spielspezifische Skript laden
-print("[o6Scripts] Loading game script...")
-local gameSuccess, gameSrc = pcall(function()
-    return game:HttpGet(BASE .. gameScript)
+-- 3. Spielspezifisches Skript laden
+notify("o6Scripts", "Lade Spiel-Skript...")
+
+local scriptUrl = REPO_BASE .. targetScriptPath
+local successGame, gameSource = pcall(function()
+    return game:HttpGet(scriptUrl)
 end)
 
-if not gameSuccess or not gameSrc then
-    warn("[o6Scripts] Failed to fetch game script from: " .. gameScript)
+if not successGame or not gameSource then
+    notify("o6Scripts", "Fehler: Spiel-Skript nicht gefunden (" .. targetScriptPath .. ")")
     return
 end
 
-local runGame, gameErr = loadstring(gameSrc)
-if not runGame then
-    warn("[o6Scripts] Game script compile error: " .. tostring(gameErr))
+local loadGameFn, errGame = loadstring(gameSource)
+if not loadGameFn then
+    notify("o6Scripts", "Skript Syntax-Fehler: " .. tostring(errGame))
     return
 end
 
--- Spiel-Skript ausführen
-task.spawn(runGame)
-print("[o6Scripts] Game script executed!")
+-- 4. Spiel-Skript ausführen (übergibt optional Compkiller falls benötigt)
+local successExec, execErr = pcall(function()
+    loadGameFn(compkillerLib)
+end)
+
+if not successExec then
+    notify("o6Scripts", "Laufzeitfehler im Skript: " .. tostring(execErr))
+    warn(execErr)
+    return
+end
+
+notify("o6Scripts", "Skript erfolgreich gestartet!")
