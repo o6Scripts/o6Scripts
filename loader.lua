@@ -4,7 +4,7 @@
 ]]
 
 local PLACE_IDS = {
-    [74102906764176] = "greedy-growers",
+    [74102906764176] = "greedy-growers.lua",
 }
 
 local CDN = "https://cdn.jsdelivr.net/gh/o6Scripts/o6Scripts@main"
