@@ -1,6 +1,4 @@
--- uiloader.lua
-
-local RAW_BASE = "https://raw.githubusercontent.com/o6Scripts/main/"
+local RAW_BASE = "https://raw.githubusercontent.com/o6Scripts/o6Scripts/main/"
 
 local function fetch(path)
     local ok, result = pcall(game.HttpGet, game, RAW_BASE .. path, true)
@@ -10,10 +8,8 @@ local function fetch(path)
     return result
 end
 
--- Compkiller global setzen damit Game-Scripts direkt drauf zugreifen können
 getgenv().Compkiller = loadstring(fetch("compkiller.luau"))()
 
--- Game Router
 local Games = {
     [5158726049] = "games/greedy-growers.lua",
     [2788229376] = "games/criminality.lua",
