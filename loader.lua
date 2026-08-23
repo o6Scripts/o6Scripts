@@ -34,7 +34,7 @@ if not libSrc then
     warn("[Loader] Failed to fetch uiloader.lua")
     return
 end
-loadstring(libSrc)()
+Compkiller = loadstring(libSrc)()
 
 -- 2. Load game script (has access to global Compkiller)
 local gameSrc = fetch(scriptPath)
