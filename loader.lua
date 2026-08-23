@@ -3,7 +3,7 @@
 local GITHUB_URL = "https://raw.githubusercontent.com/o6Scripts/o6Scripts/main"
 
 local GAMES = {
-    [12647803539] = "games/greedy-growers.lua",
+    [74102906764176] = "games/greedy-growers.lua",
 }
 
 local placeId = game.PlaceId
