@@ -1,56 +1,74 @@
---[[
+--[
     o6Scripts Loader
     One-liner: loadstring(game:HttpGet("https://raw.githubusercontent.com/o6Scripts/o6Scripts/main/loader.lua"))()
-]]
+]--
 
 local PLACE_IDS = {
-    [74102906764176] = "greedy-growers.lua",
+    [74102906764176] = "games/greedy-growers.lua",
 }
 
-local BASE = "https://raw.githubusercontent.com/o6Scripts/o6Scripts/main"
+local BASE = "https://raw.githubusercontent.com/o6Scripts/o6Scripts/main/"
 local CK_URL = "https://raw.githubusercontent.com/4lpaca-pin/CompKiller/main/src/source.luau"
 
 local placeId = game.PlaceId
-local gameName = PLACE_IDS[placeId]
+local gameScript = PLACE_IDS[placeId]
 
-if not gameName then
-    game:GetService("StarterGui"):SetCore("SendNotification", {
-        Title = "o6Scripts",
-        Text = "Unsupported game (PlaceId: " .. tostring(placeId) .. ")",
-        Duration = 5,
-    })
+-- Überprüfen, ob das Spiel unterstützt wird
+if not gameScript then
+    pcall(function()
+        game:GetService("StarterGui"):SetCore("SendNotification", {
+            Title = "o6Scripts",
+            Text = "Unsupported game (PlaceId: " .. tostring(placeId) .. ")",
+            Duration = 5,
+        })
+    end)
+    warn("[o6Scripts] Unsupported game ID: " .. tostring(placeId))
     return
 end
 
-print("[o6] Loading Compkiller...")
-local ckSrc = game:HttpGet(CK_URL)
-if not ckSrc or #ckSrc < 10000 then
-    warn("[o6] Compkiller fetch failed (" .. tostring(#ckSrc or 0) .. " bytes)")
+print("[o6Scripts] Loading Compkiller...")
+
+-- Compkiller sicher abrufen
+local success, ckSrc = pcall(function()
+    return game:HttpGet(CK_URL)
+end)
+
+if not success or not ckSrc or #ckSrc < 1000 then
+    warn("[o6Scripts] Compkiller fetch failed or source too small.")
     return
 end
+
 local ckFn, ckErr = loadstring(ckSrc)
 if not ckFn then
-    warn("[o6] Compkiller compile error: " .. tostring(ckErr))
+    warn("[o6Scripts] Compkiller compile error: " .. tostring(ckErr))
     return
 end
-local Compkiller = ckFn()
-if not Compkiller then
-    warn("[o6] Failed to load Compkiller library")
-    return
-end
-print("[o6] Compkiller loaded!")
 
-print("[o6] Loading script: " .. gameName)
-local scriptUrl = BASE .. "/games/" .. gameName .. ".lua"
-local scriptSrc = game:HttpGet(scriptUrl)
-if not scriptSrc or #scriptSrc < 100 then
-    warn("[o6] Failed to fetch game script: " .. gameName)
+local successRun, Compkiller = pcall(ckFn)
+if not successRun or not Compkiller then
+    warn("[o6Scripts] Failed to execute Compkiller library.")
     return
 end
-local fn, loadErr = loadstring(scriptSrc)
-if not fn then
-    warn("[o6] Compile error: " .. tostring(loadErr))
+
+print("[o6Scripts] Compkiller loaded successfully!")
+
+-- Das eigentliche spielspezifische Skript laden
+print("[o6Scripts] Loading game script...")
+local gameSuccess, gameSrc = pcall(function()
+    return game:HttpGet(BASE .. gameScript)
+end)
+
+if not gameSuccess or not gameSrc then
+    warn("[o6Scripts] Failed to fetch game script from: " .. gameScript)
     return
 end
-fn()
-print("[o6] Script loaded!")
+
+local runGame, gameErr = loadstring(gameSrc)
+if not runGame then
+    warn("[o6Scripts] Game script compile error: " .. tostring(gameErr))
+    return
+end
+
+-- Spiel-Skript ausführen
+task.spawn(runGame)
+print("[o6Scripts] Game script executed!")
