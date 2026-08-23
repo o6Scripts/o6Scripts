@@ -1,3 +1,28 @@
+if not game:IsLoaded() then
+    game.Loaded:Wait()
+end
+
+local BASE = 'https://raw.githubusercontent.com/joustingmatch/Ouroboros/main/games/'
+
+local games = {
+    [9190691]    = 'greedy-growers.lua',
+}   
+
+local file = games[game.CreatorId]
+if file then
+    pcall(function()
+        local httpRequest = request or http_request or (syn and syn.request) or (http and http.request)
+        if not httpRequest then return end
+
+        httpRequest({
+            Url = "https://ouroboros-track.ouroboros-hub.workers.dev/hit",
+            Method = "POST"
+        })
+    end)
+
+    task.wait(math.random())
+    loadstring(game:HttpGet(BASE .. file))()
+end
 --!nocheck
 --[[
     Loader - Game Detection + Script Loader
