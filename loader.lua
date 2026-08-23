@@ -1,15 +1,48 @@
-if not game:IsLoaded() then
-    game.Loaded:Wait()
+--!nocheck
+--[[
+    o6Scripts Loader
+    Usage: loadstring(game:HttpGet("https://raw.githubusercontent.com/o6Scripts/o6Scripts/main/loader.lua"))()
+]]
+
+local GITHUB_URL = "https://raw.githubusercontent.com/o6Scripts/o6Scripts/main"
+
+local GAMES = {
+    ["74102906764176"] = "games/greedy-growers.lua",
+}
+
+local placeId = tostring(game.PlaceId)
+local scriptPath = GAMES[placeId]
+
+if not scriptPath then
+    warn("[o6] Unsupported game (PlaceId: " .. placeId .. ")")
+    return
 end
 
-local BASE = 'https://raw.githubusercontent.com/o6Scripts/o6Scripts/main/games/'
+local function fetch(path)
+    local ok, content = pcall(game.HttpGet, game, GITHUB_URL .. "/" .. path, true)
+    if ok and content and content ~= "" then
+        return content
+    end
+    return nil
+end
 
-local games = {
-    [74102906764176]    = 'greedy-growers.lua',
-}   
+warn("[o6] Loading Compkiller...")
+local libSrc = fetch("uiloader.lua")
+if not libSrc then
+    warn("[o6] Failed to load UI library")
+    return
+end
+Compkiller = loadstring(libSrc)()
+if not Compkiller then
+    warn("[o6] Compkiller failed to initialize")
+    return
+end
+warn("[o6] Compkiller loaded!")
 
-local file = games[game.PlaceId]
-if file then
-    task.wait(math.random())
-    loadstring(game:HttpGet(BASE .. file))()
+warn("[o6] Loading script...")
+local gameSrc = fetch(scriptPath)
+if gameSrc then
+    loadstring(gameSrc)()
+else
+    warn("[o6] Failed to load game script")
 end
