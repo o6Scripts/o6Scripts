@@ -24,5 +24,5 @@ if path then
         warn("[UILoader] Game script error: " .. tostring(err))
     end
 else
-    warn("[UILoader] Kein Script für PlaceId: " .. game.PlaceId)
+    warn("[UILoader] NO Script for PlaceId: " .. game.PlaceId)
 end
