@@ -4,7 +4,7 @@
 ]]
 
 local PLACE_IDS = {
-    [74102906764176] = "greedy-growers.lua",
+    [74102906764176] = "greedy-growers",
 }
 
 local BASE = "https://raw.githubusercontent.com/o6Scripts/o6Scripts/main"
@@ -38,6 +38,7 @@ if not Compkiller then
     warn("[o6] Failed to load Compkiller library")
     return
 end
+getgenv().Compkiller = Compkiller
 print("[o6] Compkiller loaded!")
 
 print("[o6] Loading script: " .. gameName)
