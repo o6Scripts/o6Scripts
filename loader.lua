@@ -1,7 +1,7 @@
 --!nocheck
 
 local GITHUB_URL = "https://raw.githubusercontent.com/o6Scripts/o6Scripts/main"
-local CK_URL = "https://raw.githubusercontent.com/o6Scripts/o6Scripts/main/src/source.luau"
+local URL = "https://raw.githubusercontent.com/o6Scripts/o6Scripts/main/src/source.luau"
 
 local GAMES = {
     ["74102906764176"] = "games/greedy-growers.lua",
@@ -24,7 +24,7 @@ local function fetch(url)
 end
 
 warn("[o6] Loading Compkiller...")
-local libSrc = fetch(CK_URL)
+local libSrc = fetch(URL)
 if not libSrc then
     warn("[o6] Failed to load UI library")
     return
