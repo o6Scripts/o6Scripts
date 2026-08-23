@@ -1,7 +1,9 @@
 local RAW_BASE = "https://raw.githubusercontent.com/o6Scripts/o6Scripts/main/"
 
 local function fetch(path)
-    local ok, result = pcall(game.HttpGet, game, RAW_BASE .. path, true)
+    local ok, result = pcall(function()
+        return game:HttpGet(RAW_BASE .. path, true)
+    end)
     if not ok or not result then
         error("[UILoader] Fetch failed: " .. path)
     end
