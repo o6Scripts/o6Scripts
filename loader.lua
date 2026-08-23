@@ -1,8 +1,4 @@
 --!nocheck
---[[
-    o6Scripts Loader
-    Usage: loadstring(game:HttpGet("https://raw.githubusercontent.com/o6Scripts/o6Scripts/main/loader.lua"))()
-]]
 
 local GITHUB_URL = "https://raw.githubusercontent.com/o6Scripts/o6Scripts/main"
 
