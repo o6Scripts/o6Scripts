@@ -1,24 +1,19 @@
-if not game:IsLoaded() then
-    game.Loaded:Wait()
+--!nocheck
+local GITHUB_URL = "https://raw.githubusercontent.com/o6Scripts/o6Scripts/main"
+
+local function fetch(path)
+    local ok, content = pcall(function()
+        return game:HttpGet(GITHUB_URL .. "/" .. path, true)
+    end)
+    if ok and content and content ~= "" then
+        return content
+    end
+    return nil
 end
 
-local BASE = 'https://raw.githubusercontent.com/o6Scripts/o6scripts/main/'
-
-local Library = loadstring(game:HttpGet(BASE .. 'uiloader.lua'))()
-
-local Window = Library:CreateWindow("o6Scripts Hub")
-
-local games = {
-    [74102906764176] = 'greedy-growers.lua',
-    [114697347887839] = 'monkey-escape.lua',
-    [4588604953] = 'criminality.lua',
-}
-
-local file = games[game.PlaceId]
-if file then
-    task.wait(math.random())
-    local gameScript = loadstring(game:HttpGet(BASE .. 'games/' .. file))()
-    if type(gameScript) == "function" then
-        gameScript(Window)
-    end
+local uiloader = fetch("uiloader.lua")
+if uiloader then
+    loadstring(uiloader)()
+else
+    warn("[Loader] Failed to fetch uiloader.lua")
 end
