@@ -4,11 +4,11 @@
 ]]
 
 local PLACE_IDS = {
-    [74102906764176] = "greedy-growers.lua",
+    [74102906764176] = "greedy-growers",
 }
 
 local CDN = "https://cdn.jsdelivr.net/gh/o6Scripts/o6Scripts@main"
-local CK_URL = CDN .. "https://github.com/4lpaca-pin/CompKiller/main/src/source.luau"
+local CK_URL = "https://cdn.jsdelivr.net/gh/4lpaca-pin/CompKiller@main/src/source.luau"
 
 local placeId = game.PlaceId
 local gameName = PLACE_IDS[placeId]
