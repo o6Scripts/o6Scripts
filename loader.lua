@@ -8,7 +8,7 @@ local BASE = 'https://raw.githubusercontent.com/o6Scripts/o6scripts/main/'
 local Library = loadstring(game:HttpGet(BASE .. 'uiloader.lua'))()
 
 -- 2. Erstelle das Hauptfenster (passe den Namen hier nach Wunsch an)
-local Window = Library:CreateWindow("o6Scripts Hub")
+local Window = Library:CreateWindow("o6Scripts")
 
 -- 3. Spiele-Tabelle
 local games = {
