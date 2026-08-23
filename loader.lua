@@ -8,7 +8,7 @@ local PLACE_IDS = {
 }
 
 local CDN = "https://cdn.jsdelivr.net/gh/o6Scripts/o6Scripts@main"
-local CK_URL = CDN .. "/src/source.luau"
+local CK_URL = CDN .. "https://github.com/4lpaca-pin/CompKiller/main/src/source.luau"
 
 local placeId = game.PlaceId
 local gameName = PLACE_IDS[placeId]
