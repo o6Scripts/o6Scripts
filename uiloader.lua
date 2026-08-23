@@ -8,7 +8,7 @@ local function fetch(path)
     return result
 end
 
-getgenv().Compkiller = loadstring(fetch("ui.luau"))()
+getgenv().Library = loadstring(fetch("ui.luau"))()
 
 local Games = {
     [5158726049] = "games/greedy-growers.lua",
