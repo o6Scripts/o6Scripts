@@ -5,8 +5,8 @@
 
 local PLACE_IDS = {
     [74102906764176] = "greedy-growers.lua",
-    [0] = "criminality.lua",        -- Hier die richtige Place ID für Criminality eintragen
-    [0] = "monkey-escape.lua",      -- Hier die richtige Place ID für Monkey Escape eintragen
+    [0] = "criminality.lua",        -- Hier die richtige Place ID eintragen
+    [0] = "monkey-escape.lua",      -- Hier die richtige Place ID eintragen
 }
 
 local BASE = "https://raw.githubusercontent.com/o6Scripts/o6Scripts/main"
@@ -18,7 +18,8 @@ local gameName = PLACE_IDS[placeId]
 
 if not gameName then
     pcall(function()
-        game:GetService("StarterGui"):SetCore("SendNotification", {
+        local starterGui = game:GetService("StarterGui")
+        starterGui:SetCore("SendNotification", {
             Title = "o6Scripts",
             Text = "Unsupported game (PlaceId: " .. tostring(placeId) .. ")",
             Duration = 5,
@@ -37,13 +38,11 @@ if not success or not ckSrc or #ckSrc < 100 then
     return
 end
 
--- Optional: Falls Compkiller ausgeführt werden soll
 local ckFunc, ckErr = loadstring(ckSrc)
 if ckFunc then
     pcall(ckFunc)
 end
 
--- Spielspezifisches Skript laden
 print("[o6] Loading game script...")
 local gameSuccess, gameSrc = pcall(function()
     return game:HttpGet(GAMES_BASE .. gameName)
