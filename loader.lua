@@ -4,7 +4,7 @@
 ]]
 
 local PLACE_IDS = {
-    [74102906764176] = "greedy-growers.lua",
+    [74102906764176] = "greedy-growers",
 }
 
 local BASE = "https://raw.githubusercontent.com/o6Scripts/o6Scripts/main"
