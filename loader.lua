@@ -1,56 +1,47 @@
 if not game:IsLoaded() then game.Loaded:Wait() end
 
-local function safeLoad(url)
-    local ok, content = pcall(game.HttpGet, game, url)
-    if not ok or not content or #content < 100 then
-        warn("[Loader] HttpGet failed " .. url .. ": " .. tostring(content))
-        return nil
-    end
-    local fn, err = loadstring(content)
-    if not fn then
-        warn("[Loader] loadstring failed: " .. tostring(err))
-        return nil
-    end
-    local ok2, res = pcall(fn)
-    if not ok2 then
-        warn("[Loader] pcall failed: " .. tostring(res))
-        return nil
-    end
-    if not res then
-        res = rawget(getfenv(), "Library") or getgenv().Library or getgenv().uiloader
-    end
-    return res
-end
-
-local Library = safeLoad("https://raw.githubusercontent.com/o6Scripts/o6Scripts/main/uiloader.luau")
-
-if not Library or type(Library.new) ~= "function" then
-    Library = rawget(getfenv(), "Library") or getgenv().Library
-end
-
-if not Library or type(Library.new) ~= "function" then
-    warn("[Loader] Library nil")
-    return
-end
-
-getgenv().Library = Library
-getgenv().uiloader = Library
-
 local BASE = "https://raw.githubusercontent.com/o6Scripts/o6Scripts/main/games/"
+
 local games = {
     [830072163] = "greedy-growers.lua",
     [33910482]  = "anime-astral.lua",
+    -- add more here: [CreatorId] = "file.lua",
 }
+
+if identifyexecutor then
+    local execName = tostring(identifyexecutor()):lower()
+    local UNSUPPORTED = { "Solara", "Xeno" }
+    for _, name in ipairs(UNSUPPORTED) do
+        if execName:find(name:lower(), 1, true) then
+            local ok, Library = pcall(function()
+                return loadstring(game:HttpGet("https://raw.githubusercontent.com/o6Scripts/o6Scripts/main/uiloader.luau"))()
+            end)
+            if ok and Library then
+                -- fallback screen if you have ObsidianUltra, otherwise simple warn
+                warn("[Loader] Unsupported executor: "..execName)
+            end
+            return
+        end
+    end
+end
+
+-- Preload uiloader so games can use `Library` global
+pcall(function()
+    local ok, res = pcall(function()
+        return loadstring(game:HttpGet("https://raw.githubusercontent.com/o6Scripts/o6Scripts/main/uiloader.luau"))()
+    end)
+    if ok and res then
+        getgenv().Library = res
+        getgenv().uiloader = res
+    end
+end)
 
 local file = games[game.CreatorId]
 if file then
-    local ok, err = pcall(function()
-        local content = game:HttpGet(BASE .. file)
-        local fn, lerr = loadstring(content)
-        if not fn then error(lerr) end
-        fn()
-    end)
-    if not ok then warn("[Loader] Game load failed: " .. tostring(err)) end
+    task.wait(math.random())
+    -- optional donation
+    pcall(function() loadstring(game:HttpGet(BASE .. "donation.lua"))() end)
+    loadstring(game:HttpGet(BASE .. file))()
 else
     warn("[Loader] Kein Game fuer CreatorId " .. tostring(game.CreatorId))
 end
