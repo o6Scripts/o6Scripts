@@ -39,6 +39,7 @@ getgenv().uiloader = Library
 local BASE = "https://raw.githubusercontent.com/o6Scripts/o6Scripts/main/games/"
 local games = {
     [830072163] = "greedy-growers.lua",
+    [33910482] = "anime-astral.lua",
 }
 
 local file = games[game.CreatorId]
